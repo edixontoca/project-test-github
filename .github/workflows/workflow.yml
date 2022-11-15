@@ -1,13 +1,22 @@
-name: Build and test of Java Project
+ame: Deploy
 
 on: [push]
 
 jobs:
-  build:
-    name: Build with Docker
+  deploy:
+
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v2
-      - name: Building the image from the Dockerfile
-        uses: ./.github/action-docker
+    - uses: actions/checkout@master
+    - name: Copiar el contenido del repositorio con scp
+      uses: appleboy/scp-action@master
+      env:
+        HOST: ${{ secrets.HOST }}
+        USERNAME: ${{ secrets.USERNAME }}
+        PORT: ${{ secrets.PORT }}
+        KEY: ${{ secrets.SSHKEY }}
+      with:
+        source: "site/*"
+        target: "/var/www/html"
+        strip_components: 1
